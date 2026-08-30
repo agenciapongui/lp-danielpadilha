@@ -6,6 +6,9 @@
 <title>Daniel Padilha — Vamos conversar?</title>
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#191919">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,700;1,400&family=Ubuntu:wght@700&display=swap" rel="stylesheet">
@@ -53,7 +56,7 @@ audio{width:230px;height:40px;align-self:flex-start;margin:-2px 0 0 48px}
 
 <script>
 /* ===================== CONFIGURAÇÃO ===================== */
-const WA_NUMERO = '55SEUNUMEROAQUI';   // <- trocar pelo WhatsApp do Daniel (só dígitos, com 55+DDD)
+const WA_NUMERO = '5561995737171';   // WhatsApp do Daniel (55 + DDD 61 + número)
 const WEBHOOK_URL = '';                // <- opcional: webhook do n8n pra receber as respostas
 
 /* ===================== O FLUXO (espelho 1:1 da referência, adaptado) ===================== */
@@ -104,6 +107,7 @@ const R = {};        // respostas
 let passo = 0;
 
 const espera = ms => new Promise(r => setTimeout(r, ms));
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function rolar(){ window.scrollTo({top: document.body.scrollHeight, behavior:'smooth'}); }
 
 function bolha(html, classe){
@@ -160,7 +164,7 @@ async function roda(){
   for (const p of FLUXO){
     if (p.se && R[p.se.id] !== p.se.igual) continue;
     if (p.t === 'msg'){ await digita(900); bolha(p.txt, p.classe); await espera(350); continue; }
-    if (p.t === 'msgNome'){ await digita(700); bolha('Perfeito, <b>' + (R.nome || '') + '</b>!'); await espera(350); continue; }
+    if (p.t === 'msgNome'){ await digita(700); bolha('Perfeito, <b>' + esc(R.nome || '') + '</b>!'); await espera(350); continue; }
     await digita(1000); bolha(p.txt, p.classe);
     if (p.audio) { const a = document.createElement('audio'); a.controls = true; a.src = p.audio; chat.appendChild(a); rolar(); }
     let v;
@@ -180,14 +184,26 @@ async function roda(){
 }
 
 async function finaliza(){
-  const resumo = [
-    'Oi Daniel! Acabei de preencher o formulário da carta.',
-    'Nome: ' + (R.nome || ''),
-    'Área/tese: ' + (R.area || ''),
-    'Momento: ' + (R.momento || ''),
-    'Investe em anúncio: ' + (R.trafego || '') + (R.investimento ? ' (' + R.investimento + ')' : ''),
-    'Maior gargalo: ' + (R.gargalo || '')
-  ].join('\n');
+  const campos = [
+    ['Nome', R.nome],
+    ['WhatsApp', R.whatsapp],
+    ['E-mail', R.email],
+    ['Instagram', R.instagram],
+    ['Área / tese que mais fecha', R.area],
+    ['Momento hoje', R.momento],
+    ['De onde vêm os clientes', R.canais],
+    ['Produz conteúdo p/ captar', R.conteudo],
+    ['Investe em tráfego', (R.trafego || '') + (R.investimento ? ' — ' + R.investimento : '')],
+    ['Faturamento mensal', R.faturamento],
+    ['Meta de faturamento', R.meta],
+    ['Maior gargalo', R.gargalo],
+    ['Já investe p/ resolver isso', R.solucao],
+    ['Segue o perfil há', R.segue],
+    ['Chegou por', R.origem]
+  ];
+  const linhas = ['Oi Daniel! Acabei de preencher o formulário da carta.', ''];
+  campos.forEach(([k, v]) => { if (v && String(v).trim()) linhas.push(k + ': ' + v); });
+  const resumo = linhas.join('\n');
   if (WEBHOOK_URL){ try { await fetch(WEBHOOK_URL, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({origem:'carta-pongui', data: new Date().toISOString(), respostas: R})}); } catch(e){} }
   location.href = 'https://wa.me/' + WA_NUMERO + '?text=' + encodeURIComponent(resumo);
 }
