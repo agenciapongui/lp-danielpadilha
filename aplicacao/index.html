@@ -57,7 +57,7 @@ audio{width:230px;height:40px;align-self:flex-start;margin:-2px 0 0 48px}
 <script>
 /* ===================== CONFIGURAÇÃO ===================== */
 const WA_NUMERO = '5561995737171';   // WhatsApp do Daniel (55 + DDD 61 + número)
-const WEBHOOK_URL = '';                // <- opcional: webhook do n8n pra receber as respostas
+const WEBHOOK_URL = '';                // <- COLAR AQUI a URL do endpoint do CRM (ex.: https://crm.pongui.com.br/api/leads/carta). Vazio = não envia.
 
 /* ===================== O FLUXO (espelho 1:1 da referência, adaptado) ===================== */
 const FLUXO = [
@@ -184,28 +184,47 @@ async function roda(){
 }
 
 async function finaliza(){
-  const campos = [
-    ['Nome', R.nome],
-    ['WhatsApp', R.whatsapp],
-    ['E-mail', R.email],
-    ['Instagram', R.instagram],
-    ['Área / tese que mais fecha', R.area],
-    ['Momento hoje', R.momento],
-    ['De onde vêm os clientes', R.canais],
-    ['Produz conteúdo p/ captar', R.conteudo],
-    ['Investe em tráfego', (R.trafego || '') + (R.investimento ? ' — ' + R.investimento : '')],
-    ['Faturamento mensal', R.faturamento],
-    ['Meta de faturamento', R.meta],
-    ['Maior gargalo', R.gargalo],
-    ['Já investe p/ resolver isso', R.solucao],
-    ['Segue o perfil há', R.segue],
-    ['Chegou por', R.origem]
-  ];
-  const linhas = ['Oi Daniel! Acabei de preencher o formulário da carta.', ''];
-  campos.forEach(([k, v]) => { if (v && String(v).trim()) linhas.push(k + ': ' + v); });
-  const resumo = linhas.join('\n');
-  if (WEBHOOK_URL){ try { await fetch(WEBHOOK_URL, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({origem:'carta-pongui', data: new Date().toISOString(), respostas: R})}); } catch(e){} }
-  location.href = 'https://wa.me/' + WA_NUMERO + '?text=' + encodeURIComponent(resumo);
+  // Payload completo -> CRM (todas as informações do lead)
+  const payload = {
+    origem: 'carta-odanielpadilha',
+    pagina: location.href,
+    data: new Date().toISOString(),
+    lead: {
+      nome:                R.nome        || '',
+      whatsapp:            R.whatsapp    || '',
+      email:               R.email       || '',
+      instagram:           R.instagram   || '',
+      area_tese:           R.area        || '',
+      momento:             R.momento     || '',
+      canais_aquisicao:    R.canais      || '',
+      produz_conteudo:     R.conteudo    || '',
+      investe_trafego:     R.trafego     || '',
+      investimento_mensal: R.investimento|| '',
+      faturamento_mensal:  R.faturamento || '',
+      meta_faturamento:    R.meta        || '',
+      maior_gargalo:       R.gargalo     || '',
+      ja_investe_solucao:  R.solucao     || '',
+      tempo_seguindo:      R.segue       || '',
+      canal_origem:        R.origem      || ''
+    }
+  };
+  // Envia ao CRM sem bloquear o redirect e sobrevivendo à navegação.
+  // Content-Type text/plain evita o preflight CORS (requisição "simples").
+  if (WEBHOOK_URL){
+    const corpo = JSON.stringify(payload);
+    let enviado = false;
+    try {
+      if (navigator.sendBeacon){
+        enviado = navigator.sendBeacon(WEBHOOK_URL, new Blob([corpo], {type:'text/plain;charset=UTF-8'}));
+      }
+    } catch(e){}
+    if (!enviado){
+      try { fetch(WEBHOOK_URL, {method:'POST', headers:{'Content-Type':'text/plain;charset=UTF-8'}, body: corpo, keepalive:true}); } catch(e){}
+    }
+  }
+  // WhatsApp: mensagem curta, só pra iniciar a conversa (os dados vão pro CRM).
+  const msg = 'Oi Daniel! Sou ' + (R.nome || 'um advogado(a)') + ' e acabei de preencher o formulário da carta.';
+  location.href = 'https://wa.me/' + WA_NUMERO + '?text=' + encodeURIComponent(msg);
 }
 
 roda();
