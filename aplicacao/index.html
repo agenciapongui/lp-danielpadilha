@@ -57,7 +57,7 @@ audio{width:230px;height:40px;align-self:flex-start;margin:-2px 0 0 48px}
 <script>
 /* ===================== CONFIGURAÇÃO ===================== */
 const WA_NUMERO = '5561995737171';   // WhatsApp do Daniel (55 + DDD 61 + número)
-const WEBHOOK_URL = '';                // <- COLAR AQUI a URL do endpoint do CRM (ex.: https://crm.pongui.com.br/api/leads/carta). Vazio = não envia.
+const WEBHOOK_URL = 'https://nixjileegdtrycvrdwnj.supabase.co/functions/v1/leads-carta';  // endpoint do CRM (Supabase Edge Function leads-carta)
 
 /* ===================== O FLUXO (espelho 1:1 da referência, adaptado) ===================== */
 const FLUXO = [
