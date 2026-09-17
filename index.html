@@ -56,11 +56,12 @@ b,strong{color:var(--branco);font-weight:700}
 
 h1{font-family:'Oswald',sans-serif;font-weight:500;text-transform:uppercase;color:var(--branco);font-size:clamp(1.85rem,5.6vw,2.5rem);line-height:1.15;margin:2.2em 0 1em}
 .beat{font-size:1.5rem;font-weight:600;color:var(--branco);line-height:1.3;margin:2.4em 0 .9em}
+.beat:not(.red){font-family:'Oswald',sans-serif;font-weight:500;text-transform:uppercase;font-size:clamp(1.5rem,4.6vw,2rem);line-height:1.15}
 hr{border:0;height:1px;background:var(--divisor);margin-top:3.2em;margin-bottom:3em}
 
 .callout{display:flex;gap:12px;background:var(--callout);border-radius:10px;padding:15px 17px}
 .callout .emo{flex-shrink:0;font-size:1.25rem;line-height:1.4}
-.callout p{margin:0}
+.callout p{margin:0;font-size:1.125rem;line-height:1.55}
 
 .sim li,.nao li,.seta-l li{position:relative;padding-left:1.7rem}
 .sim li::before{content:"✓";position:absolute;left:0;color:var(--branco);font-weight:700}
@@ -77,7 +78,7 @@ hr{border:0;height:1px;background:var(--divisor);margin-top:3.2em;margin-bottom:
 .btn:focus-visible{outline:3px solid #fff;outline-offset:3px}
 @media(max-width:480px){.btn{display:block}}
 
-.legenda{font-style:italic;font-size:1rem;color:#b3b2af;margin-bottom:1.5em}
+.legenda{font-style:italic;font-size:.9375rem;color:#b3b2af;margin-bottom:1.5em}
 figcaption.legenda{margin:0.5em 0 0}
 .par{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:.7em}
 .par img{margin:0}
@@ -106,25 +107,22 @@ footer{border-top:1px solid var(--divisor);margin-top:64px;padding:36px 0 48px}
 
   <div class="callout"><span class="emo">💡</span><p>Eu pego o tráfego que já te decepcionou e transformo ele no canal mais previsível de contratos do seu escritório. Você para de torcer por indicação, seu time passa a atender lead qualificado e o seu nome vira referência na sua tese, na sua região ou no Brasil inteiro.</p></div>
 
-  <hr>
 
   <!-- PARA QUEM EU JÁ FIZ -->
   <p class="beat">Para quem eu já fiz</p>
   <figure><img src="img/img-8.webp" alt="Dra. Rayelle, Dra. Vivian e Dr. Euro: players que confiaram no trabalho da Pongui" width="2040" height="836" loading="lazy" decoding="async" style="border-radius:10px"><figcaption class="legenda">Players que confiaram no nosso trabalho: Dra. Rayelle, Dra. Vivian e Dr. Euro.</figcaption></figure>
 
-  <hr>
 
   <!-- POR QUE EU FAÇO -->
   <p class="beat">Por que eu faço</p>
   <p>O gestor que a maioria dos escritórios contrata toca dezenas de contas ao mesmo tempo, com a mesma campanha e a mesma página trocando só o nome. Personalização não cabe nesse modelo, e você vira mais uma linha na lista dele.</p>
   <p>Eu escolhi o contrário: ser <b>boutique</b>. Menos clientes, de propósito, pra dar mais atenção e entregar mais resultado a cada um. A sua tese, a sua região e o seu momento entram na estratégia porque eu tenho tempo pra pensar no seu negócio, não só na sua campanha.</p>
-  <p>Se você quer só mais um gestor pra tocar anúncio, tudo bem, tem muita gente boa e mais barata fazendo isso. <span class="marca">Mas se você quer alguém que trate o resultado do seu escritório como se fosse o dele</span>, é comigo.</p>
+  <p>Se você quer só mais um gestor pra tocar anúncio, tudo bem, existe muita gente boa e mais barata pra isso. <span class="marca">Mas se você quer um sócio da sua captação, alguém que trata o crescimento do seu escritório como se fosse o próprio negócio</span>, é comigo.</p>
 
-  <hr>
 
   <!-- CTA -->
   <div id="formulario">
-    <p class="beat red">⚠️ ATENÇÃO — NÃO me chame se você:</p>
+    <p class="beat red">⚠️ ATENÇÃO, NÃO me chame se você:</p>
     <ol class="red-lista">
       <li>quer resultado garantido em 30 dias;</li>
       <li>não é advogado(a) nem atua no mercado jurídico;</li>
